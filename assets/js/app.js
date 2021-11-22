@@ -45,9 +45,10 @@
             coordsNear.push(near);
         };
         
-        coordsNear.sort((a, b) => a.meters > b.meters ? 1 : -1);
-        coordsNear = coordsNear.filter((set => f => !set.has(f.adress) && set.add(f.adress))(new Set));
-        coordsNear = coordsNear.slice(0, 5);
+        coordsNear = coordsNear
+                        .sort((a, b) => a.meters > b.meters ? 1 : -1)
+                        .filter((set => f => !set.has(f.adress) && set.add(f.adress))(new Set))
+                        .slice(0, 5);
 
         for(let item of coordsNear){
             item.meters = Math.trunc(item.meters) + "m";
