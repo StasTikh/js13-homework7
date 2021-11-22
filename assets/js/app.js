@@ -1,5 +1,5 @@
 
-    const URL = '../../tso-data-pb.json';
+    const URL = './tso-data-pb.json';
 
     let data = await fetch(URL);
         data = await data.json();
@@ -36,12 +36,13 @@
     let coordsNear = [];
     
     function showPosition(position) {
-        let lon = position.coords.latitude; 
-        let lat = position.coords.longitude;
+        let lat = position.coords.latitude; 
+        let lon = position.coords.longitude;
         console.log("Браузер поддерживает геолокацию");
+        console.log(`latitude ${lon}; longitude ${lat}`);
         
         for (let item of data){
-            let near = new Adress(item.adressRu, item.latitude, item.longitude, getDistanceFromLatLonInKm(lat, lon, item.latitude, item.longitude));
+            let near = new Adress(item.adressRu, item.longitude, item.latitude, getDistanceFromLatLonInKm(lat, lon, item.longitude, item.latitude));
             coordsNear.push(near);
         };
         
@@ -59,12 +60,13 @@
         let map;
         DG.then(function () {
         map = DG.map('map', {
-        center: [coordsNear[0].longitude, coordsNear[0].latitude],
+        center: [coordsNear[0].latitude, coordsNear[0].longitude],
         zoom: 20
         });
     
-        DG.marker([coordsNear[0].longitude, coordsNear[0].latitude]).addTo(map).bindPopup(`${coordsNear[0].adress}`);
-        DG.marker([coordsNear[1].longitude, coordsNear[1].latitude]).addTo(map).bindPopup(`${coordsNear[1].adress}`);
+        for(let item of coordsNear){    
+            DG.marker([item.latitude, item.longitude]).addTo(map).bindPopup(`${item.adress}`);
+        }
         });
         
         
